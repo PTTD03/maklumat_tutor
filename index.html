@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Borang Pendaftaran &amp; Maklumat Tenaga Pengajar | Pusat Tuisyen Teraju Didik</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #f1f5f9;
+      color: #0f172a;
+    }
+    .step-section {
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .step-section.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .input-field {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.65rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.925rem;
+      background-color: #ffffff;
+      transition: all 0.15s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+    }
+    .input-error {
+      border-color: #e11d48 !important;
+      background-color: #fff1f2 !important;
+    }
+    #signatureCanvas {
+      touch-action: none;
+      cursor: crosshair;
+    }
+    @media print {
+      body {
+        background-color: #ffffff !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-card {
+        box-shadow: none !important;
+        border: 1px solid #cbd5e1 !important;
+        margin: 0 !important;
+        padding: 1rem !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-gradient-to-r from-slate-900 via-sky-950 to-slate-900 text-white shadow-md no-print">
+    <div class="max-w-4xl mx-auto px-4 py-6 sm:px-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div>
+          <span class="inline-block text-xs font-bold tracking-wider uppercase bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2.5 py-0.5 rounded-full mb-1.5">
+            Pusat Tuisyen Teraju Didik (PTTD)
+          </span>
+          <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+            Borang Pendaftaran &amp; Maklumat Tenaga Pengajar
+          </h1>
+          <p class="text-slate-300 text-xs sm:text-sm mt-1">
+            Sila lengkapkan maklumat di bawah bagi tujuan rekod pentadbiran, penyediaan jadual mengajar, urusan pembayaran elaun, serta pendaftaran rasmi tenaga pengajar.
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="flex-grow max-w-4xl w-full mx-auto px-4 py-6 sm:px-6">
+
+    <!-- Progress Wizard Bar -->
+    <div id="wizardProgress" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-5 mb-6 no-print">
+      <div class="flex items-center justify-between text-xs font-semibold text-slate-500 mb-2">
+        <span id="stepLabelText" class="text-sky-700 font-bold">Langkah 1 daripada 6: Maklumat Peribadi</span>
+        <span id="stepPercentText">17%</span>
+      </div>
+      <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden mb-4">
+        <div id="progressBarFill" class="bg-sky-600 h-full rounded-full transition-all duration-300" style="width: 16.66%"></div>
+      </div>
+
+      <!-- Step Pills -->
+      <div class="grid grid-cols-3 sm:grid-cols-6 gap-1.5">
+        <button type="button" onclick="jumpToStep(1)" id="pill-1" class="step-pill text-left px-2.5 py-2 rounded-lg border text-xs font-semibold transition bg-sky-50 border-sky-500 text-sky-800">
+          1. Peribadi
+        </button>
+        <button type="button" onclick="jumpToStep(2)" id="pill-2" class="step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50">
+          2. Perbankan
+        </button>
+        <button type="button" onclick="jumpToStep(3)" id="pill-3" class="step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50">
+          3. Akademik
+        </button>
+        <button type="button" onclick="jumpToStep(4)" id="pill-4" class="step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50">
+          4. Jadual
+        </button>
+        <button type="button" onclick="jumpToStep(5)" id="pill-5" class="step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50">
+          5. Dokumen
+        </button>
+        <button type="button" onclick="jumpToStep(6)" id="pill-6" class="step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50">
+          6. Terma &amp; Tandatangan
+        </button>
+      </div>
+    </div>
+
+    <!-- Validation Alert Banner -->
+    <div id="validationBanner" class="hidden bg-rose-50 border border-rose-300 text-rose-800 px-4 py-3 rounded-xl mb-5 text-sm flex items-start gap-2.5 no-print">
+      <svg class="w-5 h-5 text-rose-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+      </svg>
+      <div>
+        <p class="font-bold">Sila lengkapkan ruangan wajib yang bertanda merah (*)</p>
+        <p id="validationDetail" class="text-xs mt-0.5 text-rose-700">Pastikan semua medan diperlukan telah diisi dengan betul sebelum meneruskan.</p>
+      </div>
+    </div>
+
+    <!-- FORM CONTAINER -->
+    <form id="teacherForm" novalidate class="no-print">
+
+      <!-- ==================== BAHAGIAN 1: PERIBADI ==================== -->
+      <section id="step-1" class="step-section active bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 1: Maklumat Peribadi &amp; Perhubungan</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Sila isi maklumat tepat seperti dalam Kad Pengenalan anda.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Penuh (Seperti dalam IC) <span class="text-rose-600">*</span></label>
+            <input type="text" id="namaPenuh" required placeholder="Contoh: NURUL AINA BINTI AHMAD" class="input-field uppercase" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Panggilan (Rujukan Pelajar/Ibu Bapa) <span class="text-rose-600">*</span></label>
+            <input type="text" id="namaPanggilan" required placeholder="Contoh: Cikgu Aina" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombor Kad Pengenalan <span class="text-rose-600">*</span></label>
+            <input type="text" id="noIc" required placeholder="Contoh: 950101-08-5544" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tarikh Lahir <span class="text-rose-600">*</span></label>
+            <input type="date" id="tarikhLahir" required class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tempat Lahir (Negeri) <span class="text-rose-600">*</span></label>
+            <input type="text" id="tempatLahir" required placeholder="Contoh: Ipoh, Perak" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Jantina <span class="text-rose-600">*</span></label>
+            <select id="jantina" required class="input-field">
+              <option value="">-- Pilih Jantina --</option>
+              <option value="Perempuan">Perempuan</option>
+              <option value="Lelaki">Lelaki</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Bangsa <span class="text-rose-600">*</span></label>
+            <select id="bangsa" required onchange="toggleOtherInput('bangsa', 'bangsaLainBox')" class="input-field">
+              <option value="">-- Pilih Bangsa --</option>
+              <option value="Melayu">Melayu</option>
+              <option value="Cina">Cina</option>
+              <option value="India">India</option>
+              <option value="Bumiputera Sabah / Sarawak">Bumiputera Sabah / Sarawak</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+            <div id="bangsaLainBox" class="hidden mt-2">
+              <input type="text" id="bangsaLain" placeholder="Nyatakan bangsa anda" class="input-field" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Agama <span class="text-rose-600">*</span></label>
+            <select id="agama" required onchange="toggleOtherInput('agama', 'agamaLainBox')" class="input-field">
+              <option value="">-- Pilih Agama --</option>
+              <option value="Islam">Islam</option>
+              <option value="Buddha">Buddha</option>
+              <option value="Hindu">Hindu</option>
+              <option value="Kristian">Kristian</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+            <div id="agamaLainBox" class="hidden mt-2">
+              <input type="text" id="agamaLain" placeholder="Nyatakan agama anda" class="input-field" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Kewarganegaraan <span class="text-rose-600">*</span></label>
+            <select id="kewarganegaraan" required onchange="toggleOtherInput('kewarganegaraan', 'wargaLainBox')" class="input-field">
+              <option value="Warganegara Malaysia">Warganegara Malaysia</option>
+              <option value="Lain-lain">Bukan Warganegara</option>
+            </select>
+            <div id="wargaLainBox" class="hidden mt-2">
+              <input type="text" id="wargaLain" placeholder="Nyatakan negara asal" class="input-field" />
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Taraf Perkahwinan <span class="text-rose-600">*</span></label>
+            <select id="tarafPerkahwinan" required class="input-field">
+              <option value="">-- Pilih Taraf Perkahwinan --</option>
+              <option value="Bujang">Bujang</option>
+              <option value="Berkahwin">Berkahwin</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">No. Telefon (WhatsApp Aktif) <span class="text-rose-600">*</span></label>
+            <input type="tel" id="noTelefon" required placeholder="Contoh: 012-3456789" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Alamat E-mel <span class="text-rose-600">*</span></label>
+            <input type="email" id="emel" required placeholder="Contoh: cikgu.aina@gmail.com" class="input-field" />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Rumah Semasa <span class="text-rose-600">*</span></label>
+            <textarea id="alamatSemasa" rows="2" required placeholder="Alamat penuh tempat tinggal terkini" class="input-field"></textarea>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Alamat Tetap (Seperti dalam IC, jika berbeza)</label>
+            <textarea id="alamatTetap" rows="2" placeholder="Biarkan kosong jika sama dengan alamat semasa" class="input-field"></textarea>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Waris &amp; Nombor Telefon Kecemasan <span class="text-rose-600">*</span></label>
+            <input type="text" id="warisKecemasan" required placeholder="Contoh: Ahmad Bin Ali (Bapa) - 019-8765432" class="input-field" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BAHAGIAN 2: PERBANKAN ==================== -->
+      <section id="step-2" class="step-section bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 2: Maklumat Pembayaran &amp; Perbankan</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Maklumat ini digunakan bagi urusan pembayaran elaun mengajar bulanan.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama Bank <span class="text-rose-600">*</span></label>
+            <select id="namaBank" required class="input-field">
+              <option value="">-- Pilih Bank --</option>
+              <option value="Maybank">Maybank</option>
+              <option value="CIMB Bank">CIMB Bank</option>
+              <option value="Bank Islam">Bank Islam</option>
+              <option value="Public Bank">Public Bank</option>
+              <option value="RHB Bank">RHB Bank</option>
+              <option value="Bank Rakyat">Bank Rakyat</option>
+              <option value="Hong Leong Bank">Hong Leong Bank</option>
+              <option value="AmBank">AmBank</option>
+              <option value="Bank Simpanan Nasional (BSN)">Bank Simpanan Nasional (BSN)</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombor Akaun Bank (Atas nama sendiri) <span class="text-rose-600">*</span></label>
+            <input type="text" id="noAkaun" required placeholder="Contoh: 158012345678" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombor KWSP (Jika ada)</label>
+            <input type="text" id="noKwsp" placeholder="Pilihan" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nombor Cukai Pendapatan LHDN (Jika ada)</label>
+            <input type="text" id="noLhdn" placeholder="Contoh: IG 12345678090 (Pilihan)" class="input-field" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BAHAGIAN 3: AKADEMIK ==================== -->
+      <section id="step-3" class="step-section bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 3: Kelayakan Akademik &amp; Status Pekerjaan</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Sila nyatakan latar belakang pendidikan dan status semasa anda.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tahap Pendidikan Tertinggi <span class="text-rose-600">*</span></label>
+            <select id="pendidikanTertinggi" required class="input-field">
+              <option value="">-- Pilih Kelayakan --</option>
+              <option value="Ijazah Doktor Falsafah (PhD)">Ijazah Doktor Falsafah (PhD)</option>
+              <option value="Ijazah Sarjana (Master)">Ijazah Sarjana (Master)</option>
+              <option value="Ijazah Sarjana Muda (Degree)">Ijazah Sarjana Muda (Degree)</option>
+              <option value="Diploma">Diploma</option>
+              <option value="STPM / Matrikulasi / Asasi">STPM / Matrikulasi / Asasi</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Bidang Pengkhususan / Kursus <span class="text-rose-600">*</span></label>
+            <input type="text" id="bidangPengkhususan" required placeholder="Contoh: Sarjana Muda Pendidikan (Matematik)" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Nama IPT &amp; Tahun Tamat Pengajian <span class="text-rose-600">*</span></label>
+            <input type="text" id="iptTahun" required placeholder="Contoh: UPSI (2022)" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Sekolah Menengah Terakhir &amp; Tahun Tamat <span class="text-rose-600">*</span></label>
+            <input type="text" id="sekolahTahun" required placeholder="Contoh: SMK Anderson, Ipoh (2017)" class="input-field" />
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Kelayakan Ikhtisas Pendidikan</label>
+            <select id="ikhtisas" class="input-field">
+              <option value="Tiada">Tiada</option>
+              <option value="Ijazah Sarjana Muda Pendidikan (ISMP)">Ijazah Sarjana Muda Pendidikan (ISMP)</option>
+              <option value="Diploma Pendidikan / KPLI / DPLI">Diploma Pendidikan / KPLI / DPLI</option>
+              <option value="Sijil Perguruan Asas">Sijil Perguruan Asas</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Status Pekerjaan Semasa <span class="text-rose-600">*</span></label>
+            <select id="statusPekerjaan" required onchange="handleKpmStatusChange()" class="input-field">
+              <option value="">-- Pilih Status --</option>
+              <option value="Tutor Sepenuh Masa / Sambilan">Tutor Sepenuh Masa / Sambilan</option>
+              <option value="Guru Sekolah Kerajaan (KPM)">Guru Sekolah Kerajaan (KPM)</option>
+              <option value="Guru Sekolah Swasta / Antarabangsa">Guru Sekolah Swasta / Antarabangsa</option>
+              <option value="Pelajar IPT">Pelajar IPT</option>
+              <option value="Bekerja Sektor Swasta / Kerajaan (Bukan Guru)">Bekerja Sektor Swasta / Kerajaan (Bukan Guru)</option>
+              <option value="Lain-lain">Lain-lain</option>
+            </select>
+          </div>
+
+          <!-- Amaran Khas Guru KPM -->
+          <div id="kpmAlertBox" class="hidden sm:col-span-2 bg-amber-50 border border-amber-300 rounded-xl p-3.5 text-xs text-amber-900">
+            <p class="font-bold flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Perhatian Khas untuk Guru Sekolah Kerajaan (KPM):
+            </p>
+            <p class="mt-1">Sila sediakan <strong>Surat Kebenaran Melakukan Pekerjaan Luar daripada Ketua Jabatan</strong> untuk dimuat naik di Bahagian 5 atau dihantar terus melalui WhatsApp pejabat.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BAHAGIAN 4: SUBJEK & JADUAL ==================== -->
+      <section id="step-4" class="step-section bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 4: Pengalaman Mengajar, Subjek &amp; Ketersediaan</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Pilih subjek dan slot masa yang anda bersedia untuk mengajar.</p>
+        </div>
+
+        <div class="space-y-5">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Pengalaman Mengajar Terdahulu <span class="text-rose-600">*</span></label>
+            <textarea id="pengalaman" rows="2" required placeholder="Nyatakan nama sekolah/pusat tuisyen lama, subjek diajar, dan tahun berkhidmat. Tulis 'Tiada' jika baharu." class="input-field"></textarea>
+          </div>
+
+          <!-- Subjek -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-2">Subjek &amp; Tahap yang Mampu Diajar <span class="text-rose-600">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Bahasa Melayu (Sekolah Rendah)" class="rounded text-sky-600"> Bahasa Melayu (Sekolah Rendah)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Bahasa Melayu (Menengah / SPM)" class="rounded text-sky-600"> Bahasa Melayu (Menengah / SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Bahasa Inggeris (Sekolah Rendah)" class="rounded text-sky-600"> Bahasa Inggeris (Sekolah Rendah)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Bahasa Inggeris (Menengah / SPM)" class="rounded text-sky-600"> Bahasa Inggeris (Menengah / SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Matematik (Sekolah Rendah)" class="rounded text-sky-600"> Matematik (Sekolah Rendah)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Matematik (Menengah / SPM)" class="rounded text-sky-600"> Matematik (Menengah / SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Matematik Tambahan (SPM)" class="rounded text-sky-600"> Matematik Tambahan (SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Sains (Sekolah Rendah)" class="rounded text-sky-600"> Sains (Sekolah Rendah)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Sains (Menengah / SPM)" class="rounded text-sky-600"> Sains (Menengah / SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Fizik / Kimia / Biologi (SPM)" class="rounded text-sky-600"> Fizik / Kimia / Biologi (SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Sejarah (Menengah / SPM)" class="rounded text-sky-600"> Sejarah (Menengah / SPM)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="subjek" value="Prinsip Perakaunan / Ekonomi / Perniagaan" class="rounded text-sky-600"> Prinsip Perakaunan / Ekonomi / Perniagaan
+              </label>
+            </div>
+            <div class="mt-2">
+              <input type="text" id="subjekLain" placeholder="Subjek lain (jika ada, contoh: Bahasa Arab / Pendidikan Islam)" class="input-field text-xs" />
+            </div>
+          </div>
+
+          <!-- Cawangan & Mod -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-2">Cawangan / Mod Mengajar Pilihan <span class="text-rose-600">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="cawangan" value="Cawangan Pengkalan" class="rounded text-sky-600"> Cawangan Pengkalan
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="cawangan" value="Cawangan Pasir Puteh" class="rounded text-sky-600"> Cawangan Pasir Puteh
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" id="chkOnline" name="cawangan" value="Kelas Dalam Talian (Online)" onchange="toggleOnlineBox()" class="rounded text-sky-600"> Kelas Dalam Talian (Online)
+              </label>
+            </div>
+          </div>
+
+          <!-- Kelengkapan Online -->
+          <div id="onlineEquipmentBox" class="hidden bg-sky-50 border border-sky-200 rounded-xl p-3.5">
+            <label class="block text-xs font-bold text-sky-900 mb-1">Kelengkapan Mengajar Dalam Talian (Online)</label>
+            <input type="text" id="kelengkapanOnline" placeholder="Contoh: Laptop + iPad/Drawing Tab + WiFi Unifi stabil" class="input-field text-xs" />
+          </div>
+
+          <!-- Slot Masa -->
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-2">Hari &amp; Slot Masa yang Kosong untuk Mengajar <span class="text-rose-600">*</span></label>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Isnin - Jumaat (Petang: 4.00 ptg - 6.00 ptg)" class="rounded text-sky-600"> Isnin – Jumaat (Petang: 4.00 ptg – 6.00 ptg)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Isnin - Jumaat (Malam: 8.00 mlm - 10.00 mlm)" class="rounded text-sky-600"> Isnin – Jumaat (Malam: 8.00 mlm – 10.00 mlm)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Sabtu (Pagi / Petang)" class="rounded text-sky-600"> Sabtu (Pagi / Petang)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Sabtu (Malam)" class="rounded text-sky-600"> Sabtu (Malam)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Ahad (Pagi / Petang)" class="rounded text-sky-600"> Ahad (Pagi / Petang)
+              </label>
+              <label class="flex items-center gap-2 p-2.5 border border-slate-200 rounded-lg hover:bg-slate-50 cursor-pointer">
+                <input type="checkbox" name="slotMasa" value="Ahad (Malam)" class="rounded text-sky-600"> Ahad (Malam)
+              </label>
+            </div>
+          </div>
+
+          <div class="sm:w-1/2">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tarikh Mula Boleh Bertugas <span class="text-rose-600">*</span></label>
+            <input type="date" id="tarikhMula" required class="input-field" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BAHAGIAN 5: MUAT NAIK DOKUMEN (PILIHAN / WHATSAPP) ==================== -->
+      <section id="step-5" class="step-section bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 5: Dokumen Sokongan (Muat Naik / Serahan WhatsApp)</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Muat naik di bawah adalah <strong>pilihan (tidak wajib)</strong>. Sekiranya fail belum tersedia sekarang, anda boleh menanda pilihan penghantaran ke WhatsApp pejabat.</p>
+        </div>
+
+        <!-- Kotak Pilihan Kaedah Serahan Dokumen -->
+        <div class="bg-sky-50 border border-sky-200 rounded-xl p-4 mb-5">
+          <p class="text-xs font-bold text-sky-950 mb-2.5">Kaedah Serahan Dokumen Sokongan (Sila tandakan yang berkenaan):</p>
+          <div class="space-y-2 text-xs text-slate-800">
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="kaedahDokumen" value="Muat naik terus melalui borang ini" class="rounded text-sky-600 w-4 h-4">
+              <span>Saya memuat naik salinan dokumen terus di ruangan bawah.</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="kaedahDokumen" value="Akan hantar dokumen ke WhatsApp pejabat" class="rounded text-sky-600 w-4 h-4">
+              <span class="font-semibold text-sky-900">Saya akan menghantar dokumen ini ke WhatsApp pejabat.</span>
+            </label>
+            <label class="flex items-center gap-2.5 cursor-pointer">
+              <input type="checkbox" name="kaedahDokumen" value="Akan serah salinan bercetak di pusat tuisyen" class="rounded text-sky-600 w-4 h-4">
+              <span>Saya akan menyerahkan salinan bercetak secara terus di pejabat/cawangan.</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">1. Gambar Berukuran Pasport (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Latar belakang biru atau putih (gambar formal).</p>
+            <input type="file" id="filePasport" data-prefix="01_Gambar_Pasport" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">2. Salinan Kad Pengenalan / IC (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Depan &amp; belakang dalam satu muka surat/fail yang jelas.</p>
+            <input type="file" id="fileIc" data-prefix="02_Salinan_IC" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">3. Salinan Sijil SPM (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Salinan keputusan penuh SPM.</p>
+            <input type="file" id="fileSpm" data-prefix="03_Sijil_SPM" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">4. Salinan Sijil Kelayakan Tertinggi (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Skrol Ijazah Sarjana Muda / Diploma / STPM.</p>
+            <input type="file" id="fileSijilTertinggi" data-prefix="04_Sijil_Tertinggi" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">5. Salinan Transkrip Akademik Penuh (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Transkrip penuh semua semester pengajian.</p>
+            <input type="file" id="fileTranskrip" data-prefix="05_Transkrip_Akademik" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">6. Sijil Ikhtisas / Resume Terkini (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Diploma Pendidikan / KPLI / Resume mengajar.</p>
+            <input type="file" id="fileResume" data-prefix="06_Resume_Ikhtisas" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div id="kpmDocCard" class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">
+              7. Surat Kebenaran Pekerjaan Luar (Jika Guru KPM)
+            </label>
+            <p class="text-[11px] text-slate-500 mb-2">Boleh dimuat naik di sini atau dihantar melalui WhatsApp pejabat.</p>
+            <input type="file" id="fileSuratKpm" data-prefix="07_Surat_Kebenaran_KPM" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+
+          <div class="p-3.5 border border-slate-200 rounded-xl bg-slate-50/50">
+            <label class="block text-xs font-bold text-slate-800 mb-1">8. Laporan Pemeriksaan Kesihatan (Pilihan)</label>
+            <p class="text-[11px] text-slate-500 mb-2">Boleh dihantar kemudian sekiranya diminta.</p>
+            <input type="file" id="fileKesihatan" data-prefix="08_Laporan_Kesihatan" accept=".jpg,.jpeg,.png,.pdf" onchange="validateFileSize(this)" class="block w-full text-xs text-slate-600 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-sky-100 file:text-sky-800 hover:file:bg-sky-200" />
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== BAHAGIAN 6: TERMA NDA, NON-SOLICITATION & TANDATANGAN ==================== -->
+      <section id="step-6" class="step-section bg-white rounded-2xl shadow-sm border border-slate-200 p-5 sm:p-7">
+        <div class="border-b border-slate-100 pb-4 mb-5">
+          <h2 class="text-lg font-bold text-slate-900">Bahagian 6: Perjanjian Kerahsiaan (NDA), Etika &amp; Tandatangan Pemohon</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Sila baca dengan teliti syarat kerahsiaan dan etika tenaga pengajar sebelum menurunkan tandatangan digital anda.</p>
+        </div>
+
+        <!-- Kotak Klausa NDA & Non-Solicitation -->
+        <div class="bg-sky-950 text-white rounded-xl p-4 sm:p-5 mb-5 border border-sky-800">
+          <div class="flex items-center gap-2 mb-3">
+            <svg class="w-5 h-5 text-sky-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            <h3 class="text-sm font-bold tracking-wide uppercase text-sky-200">Perjanjian Kerahsiaan (NDA) &amp; Larangan Kelas Persendirian Luar</h3>
+          </div>
+          <ol class="list-decimal list-inside space-y-2.5 text-xs text-slate-200 leading-relaxed">
+            <li>
+              <strong class="text-white">Kerahsiaan Maklumat &amp; Data (NDA):</strong> Tenaga pengajar bersetuju untuk menjaga kerahsiaan segala maklumat peribadi pelajar, nombor telefon ibu bapa, struktur yuran, rekod dalaman, serta modul latihan milik Pusat Tuisyen Teraju Didik dan tidak mendedahkan atau menyalahgunakannya kepada mana-mana pihak ketiga.
+            </li>
+            <li>
+              <strong class="text-white">Larangan Memancing Pelajar (<em>Non-Solicitation</em>):</strong> Sepanjang tempoh berkhidmat dan dalam tempoh <strong>dua belas (12) bulan</strong> selepas tamat perkhidmatan, tenaga pengajar dilarang sama sekali daripada memujuk, menawarkan, atau menerima sebarang kelas tuisyen persendirian (<em>private / home tuition</em> atau kelas dalam talian persendirian) secara terus daripada pelajar atau ibu bapa Pusat Tuisyen Teraju Didik tanpa kebenaran bertulis pihak pengurusan.
+            </li>
+            <li>
+              <strong class="text-white">Hak Cipta Bahan Pengajaran:</strong> Segala modul, nota, soalan latihan, dan bahan digital yang dibangunkan khas untuk kelas di bawah jenama Pusat Tuisyen Teraju Didik adalah hak milik pusat tuisyen dan tidak boleh diedarkan di luar tanpa kebenaran.
+            </li>
+          </ol>
+        </div>
+
+        <!-- Kotak Pengakuan -->
+        <div class="space-y-3 text-xs sm:text-sm text-slate-700 bg-slate-50 p-4 rounded-xl border border-slate-200 mb-6">
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="akuanNda" required class="mt-1 rounded text-sky-600 w-4 h-4 shrink-0">
+            <span class="font-semibold text-slate-900">Saya telah membaca, memahami sepenuhnya, dan bersetuju untuk mematuhi Perjanjian Kerahsiaan (NDA), Larangan Kelas Persendirian Luar (<em>Non-Solicitation</em>), serta Hak Cipta Bahan seperti yang dinyatakan di atas. <span class="text-rose-600">*</span></span>
+          </label>
+
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="akuan1" required class="mt-1 rounded text-sky-600 w-4 h-4 shrink-0">
+            <span>Saya mengaku bahawa saya bebas daripada sebarang penyakit berjangkit atau masalah kesihatan kronik yang boleh menjejaskan tugas mengajar. <span class="text-rose-600">*</span></span>
+          </label>
+
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="akuan2" required class="mt-1 rounded text-sky-600 w-4 h-4 shrink-0">
+            <span>Saya mengaku bahawa saya tidak pernah disabitkan dengan mana-mana kesalahan jenayah di mahkamah dan bukan seorang yang muflis. <span class="text-rose-600">*</span></span>
+          </label>
+
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="akuan3" required class="mt-1 rounded text-sky-600 w-4 h-4 shrink-0">
+            <span>Saya bersetuju membenarkan Pusat Tuisyen Teraju Didik memproses data peribadi dan dokumen ini bagi tujuan pentadbiran, rekod rasmi KPM/JPN, serta penyediaan bahan profil tenaga pengajar (PDPA). <span class="text-rose-600">*</span></span>
+          </label>
+
+          <label class="flex items-start gap-3 cursor-pointer">
+            <input type="checkbox" id="akuan4" required class="mt-1 rounded text-sky-600 w-4 h-4 shrink-0">
+            <span>Saya mengesahkan bahawa semua maklumat dan dokumen yang dikemukakan di dalam borang ini adalah benar dan sah. <span class="text-rose-600">*</span></span>
+          </label>
+        </div>
+
+        <!-- Ruangan Tandatangan Digital -->
+        <div id="signatureContainer" class="border border-slate-300 rounded-xl p-4 bg-white">
+          <div class="flex items-center justify-between mb-2">
+            <label class="block text-xs font-bold text-slate-800">
+              Tandatangan Digital Pemohon <span class="text-rose-600">*</span>
+            </label>
+            <button type="button" onclick="clearSignature()" class="text-xs font-semibold text-rose-600 hover:text-rose-700 underline">
+              Padam &amp; Tandatangan Semula
+            </button>
+          </div>
+          <p class="text-[11px] text-slate-500 mb-2">Sila turunkan tandatangan anda di dalam kotak di bawah menggunakan jari (skrin sentuh) atau tetikus sebagai tanda persetujuan rasmi.</p>
+          <div class="border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 overflow-hidden">
+            <canvas id="signatureCanvas" class="w-full h-36 block"></canvas>
+          </div>
+        </div>
+      </section>
+
+      <!-- Navigation Buttons -->
+      <div class="flex items-center justify-between mt-6 pt-2">
+        <button type="button" id="btnPrev" onclick="changeStep(-1)" class="hidden px-5 py-2.5 rounded-xl border border-slate-300 bg-white text-slate-700 text-sm font-semibold hover:bg-slate-50 transition">
+          &larr; Sebelumnya
+        </button>
+        <div class="ml-auto flex items-center gap-3">
+          <button type="button" id="btnNext" onclick="changeStep(1)" class="px-6 py-2.5 rounded-xl bg-sky-600 text-white text-sm font-bold hover:bg-sky-700 shadow-sm transition">
+            Seterusnya &rarr;
+          </button>
+          <button type="submit" id="btnSubmit" class="hidden px-6 py-2.5 rounded-xl bg-emerald-600 text-white text-sm font-bold hover:bg-emerald-700 shadow-sm transition flex items-center gap-2">
+            <span id="submitBtnText">Hantar Pendaftaran</span>
+            <svg id="submitSpinner" class="hidden animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </form>
+
+    <!-- ==================== SUMMARY & PRINT RECEIPT VIEW ==================== -->
+    <div id="summarySection" class="hidden bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8 print-card">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-200 pb-4 mb-6 gap-4">
+        <div>
+          <span class="inline-block text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full mb-1">
+            Pendaftaran Berjaya Direkodkan
+          </span>
+          <h2 class="text-xl font-extrabold text-slate-900">Profil Tenaga Pengajar — Pusat Tuisyen Teraju Didik</h2>
+          <p class="text-xs text-slate-500 mt-0.5">No. Rujukan: <strong id="sumRefNo" class="text-slate-800"></strong> | Tarikh: <span id="sumDate"></span></p>
+        </div>
+        <div class="flex gap-2 no-print">
+          <button type="button" onclick="window.print()" class="px-4 py-2 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">
+            Cetak / Simpan PDF
+          </button>
+        </div>
+      </div>
+
+      <div id="serverSyncAlert" class="mb-5 p-3.5 rounded-xl text-xs border no-print"></div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+        <!-- Box 1 -->
+        <div class="border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 mb-2.5 uppercase tracking-wider text-[11px]">1. Maklumat Peribadi</h3>
+          <dl class="space-y-1.5">
+            <div class="flex justify-between"><dt class="text-slate-500">Nama Penuh:</dt><dd id="sumNama" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Nama Panggilan:</dt><dd id="sumPanggilan" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">No. IC:</dt><dd id="sumIc" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Tarikh / Tempat Lahir:</dt><dd id="sumLahir" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Jantina / Bangsa / Agama:</dt><dd id="sumDemografi" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">No. Telefon:</dt><dd id="sumTel" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">E-mel:</dt><dd id="sumEmel" class="font-semibold text-right"></dd></div>
+            <div class="pt-1 border-t border-slate-100"><dt class="text-slate-500">Alamat Semasa:</dt><dd id="sumAlamat" class="font-medium mt-0.5"></dd></div>
+            <div class="pt-1 border-t border-slate-100"><dt class="text-slate-500">Kontak Kecemasan:</dt><dd id="sumWaris" class="font-medium mt-0.5"></dd></div>
+          </dl>
+        </div>
+
+        <!-- Box 2 -->
+        <div class="border border-slate-200 rounded-xl p-4">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 mb-2.5 uppercase tracking-wider text-[11px]">2. Akademik &amp; Perbankan</h3>
+          <dl class="space-y-1.5">
+            <div class="flex justify-between"><dt class="text-slate-500">Pendidikan Tertinggi:</dt><dd id="sumPendidikan" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Pengkhususan:</dt><dd id="sumBidang" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">IPT &amp; Tahun:</dt><dd id="sumIpt" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Ikhtisas:</dt><dd id="sumIkhtisas" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">Status Semasa:</dt><dd id="sumStatus" class="font-semibold text-right"></dd></div>
+            <div class="pt-1 border-t border-slate-100 flex justify-between"><dt class="text-slate-500">Bank:</dt><dd id="sumBank" class="font-semibold text-right"></dd></div>
+            <div class="flex justify-between"><dt class="text-slate-500">No. Akaun:</dt><dd id="sumAkaun" class="font-semibold text-right"></dd></div>
+          </dl>
+        </div>
+
+        <!-- Box 3 -->
+        <div class="border border-slate-200 rounded-xl p-4 md:col-span-2">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 mb-2.5 uppercase tracking-wider text-[11px]">3. Subjek, Cawangan &amp; Jadual Mengajar</h3>
+          <dl class="space-y-1.5">
+            <div><dt class="text-slate-500">Subjek Dipohon:</dt><dd id="sumSubjek" class="font-semibold mt-0.5"></dd></div>
+            <div class="pt-1 border-t border-slate-100"><dt class="text-slate-500">Cawangan / Mod Pilihan:</dt><dd id="sumCawangan" class="font-semibold mt-0.5"></dd></div>
+            <div class="pt-1 border-t border-slate-100"><dt class="text-slate-500">Slot Masa Kosong:</dt><dd id="sumSlot" class="font-semibold mt-0.5"></dd></div>
+            <div class="pt-1 border-t border-slate-100 flex justify-between"><dt class="text-slate-500">Tarikh Mula Bertugas:</dt><dd id="sumMula" class="font-semibold"></dd></div>
+          </dl>
+        </div>
+
+        <!-- Box 4 -->
+        <div class="border border-slate-200 rounded-xl p-4 md:col-span-2">
+          <h3 class="font-bold text-slate-900 border-b border-slate-100 pb-2 mb-2.5 uppercase tracking-wider text-[11px]">4. Status &amp; Senarai Fail Dokumen Sokongan</h3>
+          <p class="text-slate-600 mb-2">Kaedah Serahan: <strong id="sumKaedahDokumen" class="text-slate-900"></strong></p>
+          <ul id="sumFilesList" class="list-disc list-inside space-y-1 text-slate-700 font-medium"></ul>
+        </div>
+
+        <!-- Box 5: Pengesahan NDA -->
+        <div class="border border-slate-200 rounded-xl p-4 md:col-span-2 bg-slate-50">
+          <h3 class="font-bold text-slate-900 border-b border-slate-200 pb-2 mb-2 uppercase tracking-wider text-[11px]">5. Pengakuan Kerahsiaan (NDA) &amp; Etika</h3>
+          <p class="text-slate-700 leading-relaxed">
+            Pemohon telah membaca dan bersetuju secara digital untuk mematuhi syarat Kerahsiaan Data (NDA), Larangan Menawarkan Kelas Persendirian kepada Pelajar Pusat Tuisyen (<em>Non-Solicitation</em> selama 12 bulan), serta Hak Cipta Bahan Pengajaran milik Pusat Tuisyen Teraju Didik.
+          </p>
+        </div>
+      </div>
+
+      <!-- Signature Block for Print -->
+      <div class="grid grid-cols-2 gap-8 mt-8 pt-6 border-t border-slate-200 text-xs">
+        <div>
+          <p class="text-slate-500 mb-2">Tandatangan Digital Pemohon:</p>
+          <img id="sigPreviewImg" src="" alt="Tandatangan Pemohon" class="h-16 object-contain border-b border-slate-400 mb-1" />
+          <p id="sigNama" class="font-bold text-slate-800"></p>
+        </div>
+        <div class="flex flex-col justify-end">
+          <p class="text-slate-500 mb-12">Disemak Oleh (Pentadbiran PTTD):</p>
+          <div class="border-b border-slate-400 w-48 mb-1"></div>
+          <p class="font-bold text-slate-800">Pengurusan Pusat Tuisyen Teraju Didik</p>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <footer class="text-center text-xs text-slate-400 py-6 no-print">
+    &copy; 2027 Pusat Tuisyen Teraju Didik. Hak Cipta Terpelihara.
+  </footer>
+
+  <script>
+    // Pautan Rasmi Google Apps Script Web App
+    const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbySZW298hIFjFSDwwTyeIpgOiM7bSEY2iAdu92EfZRBnZ-Q45QjjeRM7ppvKbJ_r7c/exec";
+
+    let currentStep = 1;
+    const totalSteps = 6;
+    const stepTitles = [
+      "Maklumat Peribadi",
+      "Maklumat Perbankan",
+      "Kelayakan Akademik",
+      "Subjek & Jadual",
+      "Dokumen Sokongan",
+      "Terma NDA & Tandatangan"
+    ];
+
+    // ==================== SIGNATURE PAD SETUP ====================
+    const canvas = document.getElementById("signatureCanvas");
+    const ctx = canvas.getContext("2d");
+    let isDrawing = false;
+    let hasSigned = false;
+
+    function resizeSignatureCanvas() {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = canvas.getBoundingClientRect();
+      if (rect.width > 0) {
+        canvas.width = rect.width * ratio;
+        canvas.height = rect.height * ratio;
+        ctx.scale(ratio, ratio);
+        ctx.lineWidth = 2.2;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.strokeStyle = "#0f172a";
+      }
+    }
+
+    function getPointerPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+      const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+      return {
+        x: clientX - rect.left,
+        y: clientY - rect.top
+      };
+    }
+
+    function startDrawing(e) {
+      isDrawing = true;
+      hasSigned = true;
+      const pos = getPointerPos(e);
+      ctx.beginPath();
+      ctx.moveTo(pos.x, pos.y);
+      document.getElementById("signatureContainer").classList.remove("input-error");
+    }
+
+    function draw(e) {
+      if (!isDrawing) return;
+      e.preventDefault();
+      const pos = getPointerPos(e);
+      ctx.lineTo(pos.x, pos.y);
+      ctx.stroke();
+    }
+
+    function stopDrawing() {
+      isDrawing = false;
+    }
+
+    function clearSignature() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      hasSigned = false;
+    }
+
+    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousemove", draw);
+    window.addEventListener("mouseup", stopDrawing);
+
+    canvas.addEventListener("touchstart", startDrawing, { passive: false });
+    canvas.addEventListener("touchmove", draw, { passive: false });
+    window.addEventListener("touchend", stopDrawing);
+
+    // ==================== WIZARD NAVIGATION ====================
+    function updateWizardUI() {
+      for (let i = 1; i <= totalSteps; i++) {
+        const section = document.getElementById(`step-${i}`);
+        const pill = document.getElementById(`pill-${i}`);
+        if (i === currentStep) {
+          section.classList.add("active");
+          pill.className = "step-pill text-left px-2.5 py-2 rounded-lg border text-xs font-bold transition bg-sky-50 border-sky-500 text-sky-800";
+        } else if (i < currentStep) {
+          section.classList.remove("active");
+          pill.className = "step-pill text-left px-2.5 py-2 rounded-lg border text-xs font-semibold transition bg-emerald-50/60 border-emerald-300 text-emerald-800";
+        } else {
+          section.classList.remove("active");
+          pill.className = "step-pill text-left px-2.5 py-2 rounded-lg border border-slate-200 text-slate-500 text-xs font-semibold transition hover:bg-slate-50";
+        }
+      }
+
+      if (currentStep === 6 && !hasSigned) {
+        setTimeout(resizeSignatureCanvas, 50);
+      }
+
+      const percent = Math.round((currentStep / totalSteps) * 100);
+      document.getElementById("stepLabelText").textContent = `Langkah ${currentStep} daripada ${totalSteps}: ${stepTitles[currentStep - 1]}`;
+      document.getElementById("stepPercentText").textContent = `${percent}%`;
+      document.getElementById("progressBarFill").style.width = `${percent}%`;
+
+      document.getElementById("btnPrev").classList.toggle("hidden", currentStep === 1);
+      document.getElementById("btnNext").classList.toggle("hidden", currentStep === totalSteps);
+      document.getElementById("btnSubmit").classList.toggle("hidden", currentStep !== totalSteps);
+
+      document.getElementById("validationBanner").classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function changeStep(direction) {
+      if (direction === 1 && !validateStep(currentStep)) {
+        return;
+      }
+      currentStep = Math.min(Math.max(1, currentStep + direction), totalSteps);
+      updateWizardUI();
+    }
+
+    function jumpToStep(targetStep) {
+      if (targetStep > currentStep) {
+        for (let s = currentStep; s < targetStep; s++) {
+          if (!validateStep(s)) {
+            currentStep = s;
+            updateWizardUI();
+            validateStep(s);
+            return;
+          }
+        }
+      }
+      currentStep = targetStep;
+      updateWizardUI();
+    }
+
+    function toggleOtherInput(selectId, boxId) {
+      const val = document.getElementById(selectId).value;
+      const box = document.getElementById(boxId);
+      if (val === "Lain-lain") {
+        box.classList.remove("hidden");
+      } else {
+        box.classList.add("hidden");
+      }
+    }
+
+    function toggleOnlineBox() {
+      const isChecked = document.getElementById("chkOnline").checked;
+      document.getElementById("onlineEquipmentBox").classList.toggle("hidden", !isChecked);
+    }
+
+    function handleKpmStatusChange() {
+      const status = document.getElementById("statusPekerjaan").value;
+      const isKpm = status === "Guru Sekolah Kerajaan (KPM)";
+      document.getElementById("kpmAlertBox").classList.toggle("hidden", !isKpm);
+
+      const kpmDocCard = document.getElementById("kpmDocCard");
+      if (isKpm) {
+        kpmDocCard.classList.add("border-amber-400", "bg-amber-50/40");
+      } else {
+        kpmDocCard.classList.remove("border-amber-400", "bg-amber-50/40");
+      }
+    }
+
+    function validateFileSize(input) {
+      if (input.files && input.files[0]) {
+        const maxBytes = 10 * 1024 * 1024; // 10MB
+        if (input.files[0].size > maxBytes) {
+          alert(`Fail "${input.files[0].name}" melebihi had maksimum 10MB. Sila mampatkan fail tersebut terlebih dahulu.`);
+          input.value = "";
+        }
+      }
+    }
+
+    function validateStep(stepNum) {
+      const section = document.getElementById(`step-${stepNum}`);
+      const requiredInputs = section.querySelectorAll("[required]");
+      let isValid = true;
+      let customMsg = "Pastikan semua medan diperlukan telah diisi dengan betul sebelum meneruskan.";
+
+      requiredInputs.forEach(el => {
+        el.classList.remove("input-error");
+        if (el.type === "checkbox") {
+          if (!el.checked) {
+            isValid = false;
+            el.parentElement.classList.add("text-rose-700", "font-semibold");
+          } else {
+            el.parentElement.classList.remove("text-rose-700", "font-semibold");
+          }
+        } else {
+          if (!el.value || !el.value.trim()) {
+            isValid = false;
+            el.classList.add("input-error");
+          }
+        }
+      });
+
+      // Semakan khas Bahagian 4
+      if (stepNum === 4) {
+        const subjekChecked = document.querySelectorAll('input[name="subjek"]:checked').length > 0 || document.getElementById("subjekLain").value.trim() !== "";
+        const cawanganChecked = document.querySelectorAll('input[name="cawangan"]:checked').length > 0;
+        const slotChecked = document.querySelectorAll('input[name="slotMasa"]:checked').length > 0;
+
+        if (!subjekChecked || !cawanganChecked || !slotChecked) {
+          isValid = false;
+          customMsg = "Sila pilih sekurang-kurangnya satu Subjek, satu Cawangan/Mod Mengajar, dan satu Slot Masa kosong.";
+        }
+      }
+
+      // Semakan khas Bahagian 6 (Tandatangan Digital)
+      if (stepNum === 6) {
+        const sigBox = document.getElementById("signatureContainer");
+        sigBox.classList.remove("input-error");
+        if (!hasSigned) {
+          isValid = false;
+          sigBox.classList.add("input-error");
+          customMsg = "Sila tandakan semua kotak pengakuan (termasuk NDA) dan turunkan tandatangan digital anda di dalam kotak disediakan.";
+        }
+      }
+
+      const banner = document.getElementById("validationBanner");
+      if (!isValid) {
+        document.getElementById("validationDetail").textContent = customMsg;
+        banner.classList.remove("hidden");
+        banner.scrollIntoView({ behavior: "smooth", block: "center" });
+      } else {
+        banner.classList.add("hidden");
+      }
+
+      return isValid;
+    }
+
+    function fileToBase64Object(fileInput) {
+      return new Promise((resolve, reject) => {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          resolve(null);
+          return;
+        }
+        const file = fileInput.files[0];
+        const prefix = fileInput.getAttribute("data-prefix") || "Dokumen";
+        const ext = file.name.split(".").pop();
+        const cleanName = `${prefix}.${ext}`;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64String = reader.result.split(",")[1];
+          resolve({
+            fileName: cleanName,
+            originalName: file.name,
+            mimeType: file.type || "application/octet-stream",
+            base64: base64String
+          });
+        };
+        reader.onerror = error => reject(error);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById("teacherForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+      if (!validateStep(6)) return;
+
+      const btnSubmit = document.getElementById("btnSubmit");
+      const submitBtnText = document.getElementById("submitBtnText");
+      const submitSpinner = document.getElementById("submitSpinner");
+
+      btnSubmit.disabled = true;
+      btnSubmit.classList.add("opacity-75", "cursor-not-allowed");
+      submitBtnText.textContent = "Sedang Menyimpan Pendaftaran...";
+      submitSpinner.classList.remove("hidden");
+
+      try {
+        const refNo = "PTTD-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
+
+        const bangsaVal = document.getElementById("bangsa").value === "Lain-lain"
+          ? document.getElementById("bangsaLain").value.trim()
+          : document.getElementById("bangsa").value;
+
+        const agamaVal = document.getElementById("agama").value === "Lain-lain"
+          ? document.getElementById("agamaLain").value.trim()
+          : document.getElementById("agama").value;
+
+        const wargaVal = document.getElementById("kewarganegaraan").value === "Lain-lain"
+          ? document.getElementById("wargaLain").value.trim()
+          : document.getElementById("kewarganegaraan").value;
+
+        const subjekArr = Array.from(document.querySelectorAll('input[name="subjek"]:checked')).map(cb => cb.value);
+        const subjekLainVal = document.getElementById("subjekLain").value.trim();
+        if (subjekLainVal) subjekArr.push(`Lain-lain: ${subjekLainVal}`);
+
+        const cawanganArr = Array.from(document.querySelectorAll('input[name="cawangan"]:checked')).map(cb => cb.value);
+        const slotArr = Array.from(document.querySelectorAll('input[name="slotMasa"]:checked')).map(cb => cb.value);
+
+        const kaedahArr = Array.from(document.querySelectorAll('input[name="kaedahDokumen"]:checked')).map(cb => cb.value);
+        const kaedahText = kaedahArr.length > 0 ? kaedahArr.join(", ") : "Tiada pilihan dinyatakan";
+
+        // Kumpul semua fail muat naik (jika ada)
+        const fileIds = [
+          "filePasport", "fileIc", "fileSpm", "fileSijilTertinggi",
+          "fileTranskrip", "fileResume", "fileSuratKpm", "fileKesihatan"
+        ];
+        const filePromises = fileIds.map(id => fileToBase64Object(document.getElementById(id)));
+        const resolvedFiles = (await Promise.all(filePromises)).filter(item => item !== null);
+
+        // Tambah imej tandatangan digital ke dalam senarai fail Drive
+        const sigDataUrl = canvas.toDataURL("image/png");
+        const sigBase64 = sigDataUrl.split(",")[1];
+        resolvedFiles.push({
+          fileName: "09_Tandatangan_Digital_NDA.png",
+          originalName: "Tandatangan Digital Pemohon",
+          mimeType: "image/png",
+          base64: sigBase64
+        });
+
+        const payload = {
+          refNo: refNo,
+          namaPenuh: document.getElementById("namaPenuh").value.trim().toUpperCase(),
+          namaPanggilan: document.getElementById("namaPanggilan").value.trim(),
+          noIc: document.getElementById("noIc").value.trim(),
+          tarikhLahir: document.getElementById("tarikhLahir").value,
+          tempatLahir: document.getElementById("tempatLahir").value.trim(),
+          jantina: document.getElementById("jantina").value,
+          bangsa: bangsaVal,
+          agama: agamaVal,
+          kewarganegaraan: wargaVal,
+          tarafPerkahwinan: document.getElementById("tarafPerkahwinan").value,
+          noTelefon: document.getElementById("noTelefon").value.trim(),
+          emel: document.getElementById("emel").value.trim(),
+          alamatSemasa: document.getElementById("alamatSemasa").value.trim(),
+          alamatTetap: document.getElementById("alamatTetap").value.trim() || "Sama seperti alamat semasa",
+          warisKecemasan: document.getElementById("warisKecemasan").value.trim(),
+          namaBank: document.getElementById("namaBank").value,
+          noAkaun: document.getElementById("noAkaun").value.trim(),
+          noKwsp: document.getElementById("noKwsp").value.trim() || "-",
+          noLhdn: document.getElementById("noLhdn").value.trim() || "-",
+          pendidikanTertinggi: document.getElementById("pendidikanTertinggi").value,
+          bidangPengkhususan: document.getElementById("bidangPengkhususan").value.trim(),
+          iptTahun: document.getElementById("iptTahun").value.trim(),
+          sekolahTahun: document.getElementById("sekolahTahun").value.trim(),
+          ikhtisas: document.getElementById("ikhtisas").value,
+          statusPekerjaan: document.getElementById("statusPekerjaan").value,
+          pengalaman: `[Serahan Dokumen: ${kaedahText}] ` + document.getElementById("pengalaman").value.trim(),
+          subjek: subjekArr.join(", "),
+          cawanganMod: cawanganArr.join(", "),
+          kelengkapanOnline: document.getElementById("kelengkapanOnline").value.trim() || "-",
+          slotMasa: slotArr.join(", "),
+          tarikhMula: document.getElementById("tarikhMula").value,
+          files: resolvedFiles
+        };
+
+        let syncSuccess = false;
+        let syncMessage = "";
+
+        if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL.startsWith("http")) {
+          const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify(payload)
+          });
+          const result = await response.json();
+          if (result.status === "success") {
+            syncSuccess = true;
+            syncMessage = "Semua maklumat pendaftaran dan tandatangan perjanjian NDA anda telah berjaya disimpan ke pangkalan data Pusat Tuisyen Teraju Didik.";
+          } else {
+            syncMessage = "Ralat pelayan: " + (result.message || "Gagal menyimpan data.");
+          }
+        }
+
+        populateSummary(payload, resolvedFiles, kaedahText, sigDataUrl, syncSuccess, syncMessage);
+
+      } catch (error) {
+        alert("Maaf, berlaku ralat semasa menghantar borang: " + error.message);
+        btnSubmit.disabled = false;
+        btnSubmit.classList.remove("opacity-75", "cursor-not-allowed");
+        submitBtnText.textContent = "Hantar Pendaftaran";
+        submitSpinner.classList.add("hidden");
+      }
+    });
+
+    function populateSummary(data, files, kaedahText, sigDataUrl, syncSuccess, syncMessage) {
+      document.getElementById("teacherForm").classList.add("hidden");
+      document.getElementById("wizardProgress").classList.add("hidden");
+      document.getElementById("summarySection").classList.remove("hidden");
+
+      const alertBox = document.getElementById("serverSyncAlert");
+      if (syncSuccess) {
+        alertBox.className = "mb-5 p-3.5 rounded-xl text-xs border bg-emerald-50 border-emerald-200 text-emerald-900 font-medium no-print";
+        alertBox.textContent = syncMessage;
+      } else {
+        alertBox.className = "mb-5 p-3.5 rounded-xl text-xs border bg-amber-50 border-amber-200 text-amber-900 font-medium no-print";
+        alertBox.textContent = syncMessage || "Sila simpan salinan PDF ini sebagai rujukan pendaftaran anda.";
+      }
+
+      document.getElementById("sumRefNo").textContent = data.refNo;
+      document.getElementById("sumDate").textContent = new Date().toLocaleDateString("ms-MY");
+      document.getElementById("sumNama").textContent = data.namaPenuh;
+      document.getElementById("sumPanggilan").textContent = data.namaPanggilan;
+      document.getElementById("sumIc").textContent = data.noIc;
+      document.getElementById("sumLahir").textContent = `${data.tarikhLahir} (${data.tempatLahir})`;
+      document.getElementById("sumDemografi").textContent = `${data.jantina} / ${data.bangsa} / ${data.agama}`;
+      document.getElementById("sumTel").textContent = data.noTelefon;
+      document.getElementById("sumEmel").textContent = data.emel;
+      document.getElementById("sumAlamat").textContent = data.alamatSemasa;
+      document.getElementById("sumWaris").textContent = data.warisKecemasan;
+
+      document.getElementById("sumPendidikan").textContent = data.pendidikanTertinggi;
+      document.getElementById("sumBidang").textContent = data.bidangPengkhususan;
+      document.getElementById("sumIpt").textContent = data.iptTahun;
+      document.getElementById("sumIkhtisas").textContent = data.ikhtisas;
+      document.getElementById("sumStatus").textContent = data.statusPekerjaan;
+      document.getElementById("sumBank").textContent = data.namaBank;
+      document.getElementById("sumAkaun").textContent = data.noAkaun;
+
+      document.getElementById("sumSubjek").textContent = data.subjek;
+      document.getElementById("sumCawangan").textContent = data.cawanganMod;
+      document.getElementById("sumSlot").textContent = data.slotMasa;
+      document.getElementById("sumMula").textContent = data.tarikhMula;
+      document.getElementById("sumKaedahDokumen").textContent = kaedahText;
+
+      const filesList = document.getElementById("sumFilesList");
+      filesList.innerHTML = "";
+      files.forEach(f => {
+        const li = document.createElement("li");
+        li.textContent = `${f.fileName} (${f.originalName})`;
+        filesList.appendChild(li);
+      });
+
+      document.getElementById("sigPreviewImg").src = sigDataUrl;
+      document.getElementById("sigNama").textContent = data.namaPenuh;
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  </script>
+</body>
+</html>
